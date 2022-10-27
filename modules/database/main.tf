@@ -25,6 +25,8 @@ resource "aws_db_instance" "lightsoff" {
 
   skip_final_snapshot = true
   maintenance_window  = "Sat:02:00-Sat:05:00"
+
+  apply_immediately = true
 }
 
 # Allow communication toward database on default security group
