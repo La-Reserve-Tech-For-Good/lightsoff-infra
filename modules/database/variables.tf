@@ -1,4 +1,4 @@
-variable "default_security_group_id" {
+variable "default_vpc_id" {
   type = string
 }
 

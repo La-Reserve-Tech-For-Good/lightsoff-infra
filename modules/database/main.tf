@@ -6,6 +6,34 @@ locals {
   database_port         = 5432
 }
 
+resource "aws_security_group" "database_sg" {
+  name        = "allow_database_access-${local.environment}"
+  description = "Allow database inbound traffic"
+
+  # Allow access database from VPC
+  ingress {
+    self      = true
+    protocol  = "TCP"
+    from_port = local.database_port
+    to_port   = local.database_port
+  }
+
+  # Allow access database from anywhere (yes, it's bad)
+  ingress {
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = "TCP"
+    from_port   = local.database_port
+    to_port     = local.database_port
+  }
+
+  egress {
+    protocol  = -1
+    self      = true
+    from_port = 0
+    to_port   = 0
+  }
+}
+
 resource "aws_db_instance" "lightsoff" {
   identifier              = "${local.name}-${local.environment}"
   allocated_storage       = local.allocated_storage
@@ -27,15 +55,7 @@ resource "aws_db_instance" "lightsoff" {
   maintenance_window  = "Sat:02:00-Sat:05:00"
 
   apply_immediately = true
-}
 
-# Allow communication toward database on default security group
-resource "aws_security_group_rule" "database" {
-  security_group_id = var.default_security_group_id
-
-  self      = true
-  type      = "ingress"
-  protocol  = "TCP"
-  from_port = local.database_port
-  to_port   = local.database_port
+  publicly_accessible    = true
+  vpc_security_group_ids = [aws_security_group.database_sg.id]
 }
