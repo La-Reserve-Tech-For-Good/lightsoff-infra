@@ -11,6 +11,9 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   TF_VAR_database_username: ${{ secrets.DATABASE_USERNAME }}
   TF_VAR_database_password: ${{ secrets.DATABASE_PASSWORD }}
+  TF_VAR_metabase_database_username: ${{ secrets.METABASE_DATABASE_USERNAME }}
+  TF_VAR_metabase_database_password: ${{ secrets.METABASE_DATABASE_PASSWORD }}
+  TF_VAR_metabase_encryption_key: ${{ secrets.METABASE_ENCRYPTION_KEY }}
 
 permissions:
   contents: read
