@@ -18,20 +18,23 @@ resource "aws_security_group" "database_sg" {
     to_port   = local.database_port
   }
 
-  # Allow access database from anywhere (yes, it's bad)
-  ingress {
-    cidr_blocks = ["0.0.0.0/0"]
-    protocol    = "TCP"
-    from_port   = local.database_port
-    to_port     = local.database_port
-  }
-
   egress {
     protocol  = -1
     self      = true
     from_port = 0
     to_port   = 0
   }
+}
+
+resource "aws_apigatewayv2_vpc_link" "database" {
+  name               = "${local.name}-${local.environment}"
+  security_group_ids = [aws_security_group.database_sg.id]
+  subnet_ids = [
+    var.subnet_a_id,
+    # This is is not working for some reason..
+    # var.subnet_b_id,
+    var.subnet_c_id
+  ]
 }
 
 resource "aws_db_instance" "lightsoff" {
@@ -56,6 +59,6 @@ resource "aws_db_instance" "lightsoff" {
 
   apply_immediately = true
 
-  publicly_accessible    = true
+  publicly_accessible    = false
   vpc_security_group_ids = [aws_security_group.database_sg.id]
 }

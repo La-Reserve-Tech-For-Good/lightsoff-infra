@@ -1,3 +1,8 @@
+variable "aws_region" {
+  type    = string
+  default = "eu-west-3"
+}
+
 variable "default_vpc_id" {
   type = string
 }
@@ -20,6 +25,11 @@ variable "database_username" {
 }
 
 variable "database_password" {
+  type      = string
+  sensitive = true
+}
+
+variable "encryption_key" {
   type      = string
   sensitive = true
 }
