@@ -18,6 +18,15 @@ resource "aws_security_group" "database_sg" {
     to_port   = local.database_port
   }
 
+  # TODO REMOVE
+  # Allow access database from anywhere (yes, it's bad but it isn't exposed publicly anyway)
+  ingress {
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = "TCP"
+    from_port   = local.database_port
+    to_port     = local.database_port
+  }
+
   egress {
     protocol  = -1
     self      = true
