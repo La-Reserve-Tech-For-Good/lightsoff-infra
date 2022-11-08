@@ -206,3 +206,12 @@ resource "aws_security_group" "metabase_sg" {
     to_port     = 0
   }
 }
+
+resource "aws_security_group_rule" "metabase_to_database" {
+  type                     = "ingress"
+  protocol                 = "TCP"
+  from_port                = var.lightsoff_database_port
+  to_port                  = var.lightsoff_database_port
+  security_group_id        = var.lightsoff_database_sg_id
+  source_security_group_id = aws_security_group.metabase_sg.id
+}

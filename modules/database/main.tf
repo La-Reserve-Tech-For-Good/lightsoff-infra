@@ -3,36 +3,11 @@ locals {
   max_allocated_storage = local.allocated_storage * 2
   name                  = "lightsoff"
   environment           = terraform.workspace
-  database_port         = 5432
 }
 
 resource "aws_security_group" "database_sg" {
   name        = "allow_database_access-${local.environment}"
   description = "Allow database inbound traffic"
-
-  # Allow access database from VPC
-  ingress {
-    self      = true
-    protocol  = "TCP"
-    from_port = local.database_port
-    to_port   = local.database_port
-  }
-
-  # TODO REMOVE
-  # Allow access database from anywhere (yes, it's bad but it isn't exposed publicly anyway)
-  ingress {
-    cidr_blocks = ["0.0.0.0/0"]
-    protocol    = "TCP"
-    from_port   = local.database_port
-    to_port     = local.database_port
-  }
-
-  egress {
-    protocol  = -1
-    self      = true
-    from_port = 0
-    to_port   = 0
-  }
 }
 
 resource "aws_apigatewayv2_vpc_link" "database" {
@@ -40,7 +15,7 @@ resource "aws_apigatewayv2_vpc_link" "database" {
   security_group_ids = [aws_security_group.database_sg.id]
   subnet_ids = [
     var.subnet_a_id,
-    # This is is not working for some reason..
+    # This one is not working for some reason..
     # var.subnet_b_id,
     var.subnet_c_id
   ]
@@ -55,7 +30,7 @@ resource "aws_db_instance" "lightsoff" {
   instance_class              = "db.t3.micro"
   engine                      = "postgres"
   engine_version              = "14.4"
-  port                        = local.database_port
+  port                        = var.database_port
   auto_minor_version_upgrade  = false
   allow_major_version_upgrade = false
 

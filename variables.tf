@@ -14,6 +14,11 @@ variable "database_password" {
   sensitive = true
 }
 
+variable "database_port" {
+  type    = number
+  default = 5432
+}
+
 # metabase_module
 variable "metabase_database_username" {
   type      = string

@@ -23,3 +23,8 @@ variable "database_password" {
   type      = string
   sensitive = true
 }
+
+variable "database_port" {
+  type    = number
+  default = 5432
+}

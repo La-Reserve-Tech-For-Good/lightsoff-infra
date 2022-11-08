@@ -33,3 +33,12 @@ variable "encryption_key" {
   type      = string
   sensitive = true
 }
+
+variable "lightsoff_database_sg_id" {
+  type = string
+}
+
+variable "lightsoff_database_port" {
+  type    = number
+  default = 5432
+}
